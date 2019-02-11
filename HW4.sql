@@ -197,15 +197,57 @@ group by l.name;
 --Baldwin	2
 --16. Using the SQL Server Management Studio GUI, create a new user (Security -> Logins -> (right-click) New Login… ) named ‘susie’ with password ‘password’.  Use SQL Server Authentication for this user’s authentication.  Make the University database her default and from the ‘User Mapping’ page, add her to the University database and make ‘dbo’ her default schema.  
 --Next create a new Database Connection Engine query (File -> New -> Database Engine Query) and sign in as ‘susie’.   NOTE: the sign in will fail unless a change is made!  Check the server logs (in the Object Explorer go to Management -> SQL Server Logs) to diagnose the problem and fix it.  Once you are signed in successfully, execute:
---select user as 'current_user';
+select user as 'current_user';
+--current_user
+--guest
 --then
---select * from course;
+select * from course;
 --Include the results after executing each statement.
-
+--Msg 208, Level 16, State 1, Line 204
+--Invalid object name 'course'.
 --17. Now go back to the ‘user’ query window (the one where you are signed in as ‘CEDARVILLE-CS-VM\user’) and grant permission for ‘susie’ to select from the course table.  Record the DDL statement that your wrote.  To make sure it worked, go back to the ‘susie’ query window and re-execute :
---select * from course;
---18. As ‘user’ create a view called ‘cs_faculty’ that shows the id, name, and dept_name for all ‘Comp. Sci.’ instructors.  
+grant select on "Prac_University"."dbo"."course" to [susie];
+--I hope that works...
+select * from course;
+--course_id	title						dept_name	credits
+--BIO-101	Intro. to Biology			Biology		4
+--BIO-301	Genetics					Biology		4
+--BIO-399	Computational Biology		Biology		3
+--CS-101	Intro. to Computer Science	Comp. Sci.	4
+--CS-190	Game Design					Comp. Sci.	4
+--CS-315	Robotics					Comp. Sci.	3
+--CS-319	Image Processing			Comp. Sci.	3
+--CS-347	Database System Concepts	Comp. Sci.	3
+--EE-181	Intro. to Digital Systems	Elec. Eng.	3
+--FIN-201	Investment Banking			Finance		3
+--HIS-351	World History				History		3
+--MU-199	Music Video Production		Music		3
+--PHY-101	Physical Principles			Physics		4
+--18. As ‘user’ create a view called ‘cs_faculty’ that shows the id, name, and dept_name for all ‘Comp. Sci.’ instructors.  '
+Go
+create view "cs_faculty" as 
+	select id,name,dept_name
+	from instructor
+	where dept_name = 'Comp. Sci.';
 --19. Again using the GUI, create a role named ‘dept_admin’ (Databases -> University -> Security -> Roles -> (right click on) Database Roles).  Add ‘susie’ as a Role Member.  Now as ‘user’ write the DDL that gives select, update, and insert permissions for the ‘cs_faculty’ view to the ‘dept_admin’ role.   
+grant select,insert,update on cs_faculty to [dept_admin]
 --20. As ‘susie’ insert a new faculty member into the ‘Comp. Sci.’ department named ‘DG’ with id 11122;
+insert into cs_faculty values ('11122','DG','Comp. Sci.');
+--It has been added.
 --21. As ‘user’ execute:
---select * from instructor;
+select * from instructor;
+--ID	name		dept_name	salary
+--10101	Srinivasan	Comp. Sci.	65000.00
+--11122	DG			Comp. Sci.	NULL
+--12121	Wu			Finance		90000.00
+--15151	Mozart		Music		40000.00
+--22222	Einstein	Physics		95000.00
+--32343	El Said		History		60000.00
+--33456	Gold		Physics		87000.00
+--45565	Katz		Comp. Sci.	75000.00
+--55555	Jones		NULL		NULL
+--58583	Califieri	History		62000.00
+--76543	Singh		Finance		80000.00
+--76766	Crick		Biology		72000.00
+--83821	Brandt		Comp. Sci.	92000.00
+--98345	Kim			Elec. Eng.	80000.00
