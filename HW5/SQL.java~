@@ -6,7 +6,7 @@ class SQL{
     
    try {           
 
-     String url = "jdbc:sqlserver://163.11.236.162:1433;user=susie;password=Michael1520";
+     String url = "jdbc:sqlserver://localhost:1433;user=susie;password=Michael1520";
      Connection conn = DriverManager.getConnection(url);
     
      PreparedStatement ps = conn.prepareStatement("select * from course");
